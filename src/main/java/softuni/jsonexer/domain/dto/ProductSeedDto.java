@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 public class ProductSeedDto implements Serializable {
@@ -26,7 +27,7 @@ public class ProductSeedDto implements Serializable {
     private User buyer;
 
     @Expose
-    private Set<Category> categories;
+    private List<Category> categories;
 
     public ProductSeedDto(){
     }
@@ -69,11 +70,11 @@ public class ProductSeedDto implements Serializable {
     }
 
     @NotNull(message = "Categories cannot be null")
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Controller;
 import softuni.jsonexer.domain.dto.CategorySeedDto;
+import softuni.jsonexer.domain.dto.ProductInRangeDto;
 import softuni.jsonexer.domain.dto.ProductSeedDto;
 import softuni.jsonexer.domain.dto.UserSeedDto;
 import softuni.jsonexer.service.CategoryService;
@@ -13,6 +14,8 @@ import softuni.jsonexer.service.UserService;
 import softuni.jsonexer.util.FileUtil;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class ProductShopController implements CommandLineRunner {
@@ -43,9 +46,10 @@ public class ProductShopController implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedUsers();
-        seedCategories();
-        seedProducts();
+        //seedUsers();
+        //seedCategories();
+        //seedProducts();
+        productsInRange();
     }
 
     private void seedUsers() throws IOException {
@@ -70,5 +74,14 @@ public class ProductShopController implements CommandLineRunner {
         ProductSeedDto[] productSeedDtos = this.gson.fromJson(content, ProductSeedDto[].class);
 
         this.productService.seedProducts(productSeedDtos);
+    }
+
+    private void productsInRange(){
+        List<ProductInRangeDto> products = this.productService
+                .productsInRange(BigDecimal.valueOf(500),BigDecimal.valueOf(1000));
+
+        String productsInRangeJson = this.gson.toJson(products);
+
+        System.out.println(productsInRangeJson);
     }
 }

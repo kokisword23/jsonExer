@@ -1,6 +1,7 @@
 package softuni.jsonexer.domain.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -10,9 +11,8 @@ public class User extends BaseEntity {
     private String firstName;
     private String lastName;
     private Integer age;
-    private Product seller;
-    private Product buyer;
     private Set<User> friends;
+
     public User() {
 
     }
@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     public String getLastName() {
         return lastName;
     }
@@ -43,29 +43,11 @@ public class User extends BaseEntity {
         this.age = age;
     }
 
-    @OneToOne(targetEntity = Product.class, mappedBy = "seller")
-    public Product getSeller() {
-        return seller;
-    }
-
-    public void setSeller(Product seller) {
-        this.seller = seller;
-    }
-
-    @OneToOne(targetEntity = Product.class, mappedBy = "buyer")
-    public Product getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(Product buyer) {
-        this.buyer = buyer;
-    }
-
-    @ManyToMany(targetEntity = User.class)
+    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_friends",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
     public Set<User> getFriends() {
         return friends;
@@ -74,4 +56,5 @@ public class User extends BaseEntity {
     public void setFriends(Set<User> friends) {
         this.friends = friends;
     }
+
 }

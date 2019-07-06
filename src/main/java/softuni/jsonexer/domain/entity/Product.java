@@ -2,6 +2,7 @@ package softuni.jsonexer.domain.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,12 +13,12 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     private User seller;
     private User buyer;
-    private Set<Category> categories;
+    private List<Category> categories;
 
     public Product(){
     }
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -55,12 +56,17 @@ public class Product extends BaseEntity {
         this.buyer = buyer;
     }
 
-    @ManyToMany(targetEntity = Category.class, mappedBy = "products")
-    public Set<Category> getCategories() {
+    @ManyToMany(targetEntity = Category.class)
+    @JoinTable(
+            name = "categories_products",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    )
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

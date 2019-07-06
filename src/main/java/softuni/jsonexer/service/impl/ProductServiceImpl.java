@@ -2,6 +2,7 @@ package softuni.jsonexer.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import softuni.jsonexer.domain.dto.ProductInRangeDto;
 import softuni.jsonexer.domain.dto.ProductSeedDto;
 import softuni.jsonexer.domain.entity.Category;
 import softuni.jsonexer.domain.entity.Product;
@@ -14,9 +15,8 @@ import softuni.jsonexer.util.ValidatorUtil;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.Null;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @Transactional
@@ -84,8 +84,8 @@ public class ProductServiceImpl implements ProductService {
         return  category;
     }
 
-    private Set<Category> getRandomCategories(){
-        Set<Category> categories =  new HashSet<>();
+    private List<Category> getRandomCategories(){
+        List<Category> categories =  new ArrayList<>();
         Random random = new Random();
 
         int size = random.nextInt((int)this.categoryRepository.count() - 1) + 1;
@@ -95,5 +95,23 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return categories;
+    }
+
+    @Override
+    public List<ProductInRangeDto> productsInRange(BigDecimal more, BigDecimal less) {
+        List<Product> products = this.productRepository
+                .findAllByPriceBetweenAndBuyerIsNullOrderByPrice(more,less);
+
+        List<ProductInRangeDto> productInRangeDtos = new ArrayList<>();
+
+        for (Product product : products) {
+            ProductInRangeDto productInRangeDto = this.modelMapper.map(product, ProductInRangeDto.class);
+            productInRangeDto.setSeller(String.format("%s %s",product.getSeller().getFirstName(),
+                    product.getSeller().getLastName()));
+
+            productInRangeDtos.add(productInRangeDto);
+        }
+
+        return productInRangeDtos;
     }
 }

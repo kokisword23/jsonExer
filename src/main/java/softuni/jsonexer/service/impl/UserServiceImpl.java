@@ -9,6 +9,8 @@ import softuni.jsonexer.repository.UserRepository;
 import softuni.jsonexer.service.UserService;
 import softuni.jsonexer.util.ValidatorUtil;
 
+import java.util.Random;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
             }
 
             User user = this.modelMapper.map(userSeedDto, User.class);
-
+            ;
             this.userRepository.saveAndFlush(user);
         }
     }

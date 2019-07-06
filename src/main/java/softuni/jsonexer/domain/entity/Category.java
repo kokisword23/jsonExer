@@ -1,16 +1,18 @@
 package softuni.jsonexer.domain.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
 public class Category extends BaseEntity{
 
     private String name;
-    private Set<Product> products;
+    private List<Product> products;
 
     public Category(){
+        this.products = new ArrayList<>();
     }
 
     @Column(name = "name")
@@ -22,17 +24,12 @@ public class Category extends BaseEntity{
         this.name = name;
     }
 
-    @ManyToMany()
-    @JoinTable(
-            name = "categories_products",
-            joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
-    )
-    public Set<Product> getProducts() {
+    @ManyToMany(targetEntity = Product.class, mappedBy = "categories")
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 }
